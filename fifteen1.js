@@ -9,8 +9,8 @@
 var div;
 var hlitee;
 var timer;
-var whiteY;
-var whiteX;
+var whiteSpaceY;
+var whiteSpaceX;
 
 window.onload = function ()
 {
@@ -47,15 +47,14 @@ window.onload = function ()
 				if (checkFinish())
 				{
 					youWin();
-					alert("YOU HAVE WON");
 				}
 				return;
 			}
 		};
 	}
 
-	whiteX = '300px';
-	whiteY = '300px';
+	whiteSpaceX = '300px';
+	whiteSpaceY = '300px';
 
 	var shufflebutton = document.getElementById('shufflebutton');
 	shufflebutton.onclick = function()
@@ -64,9 +63,9 @@ window.onload = function ()
 		for (var i=0; i<250; i++)
 		{
 			var rand = parseInt(Math.random()* 100) %4;
-			if (rand === 0)
+			if (rand == 0)
 			{
-				var tmp = calcUp(whiteX, whiteY);
+				var tmp = calcUp(whiteSpaceX, whiteSpaceY);
 				if ( tmp != -1)
 				{
 					swap(tmp);
@@ -74,7 +73,7 @@ window.onload = function ()
 			}
 			if (rand == 1)
 			{
-				tmp = calcDown(whiteX, whiteY);
+				var tmp = calcDown(whiteSpaceX, whiteSpaceY);
 				if ( tmp != -1) 
 				{
 					swap(tmp);
@@ -83,7 +82,7 @@ window.onload = function ()
 
 			if (rand == 2)
 			{
-				tmp = calcLeft(whiteX, whiteY);
+				var tmp = calcLeft(whiteSpaceX, whiteSpaceY);
 				if ( tmp != -1)
 				{
 					swap(tmp);
@@ -92,7 +91,7 @@ window.onload = function ()
 
 			if (rand == 3)
 			{
-				tmp = calcRight(whiteX, whiteY);
+				var tmp = calcRight(whiteSpaceX, whiteSpaceY);
 				if (tmp != -1)
 				{
 					swap(tmp);
@@ -102,28 +101,6 @@ window.onload = function ()
 	};
 };
 
-function checkCanMove(pos)
-{
-	if (calcLeft(whiteX, whiteY) == (pos-1))
-	{
-		return true;
-	}
-
-	if (calcDown(whiteX, whiteY) == (pos-1))
-	{
-		return true;
-	}
-
-	if (calcUp(whiteX, whiteY) == (pos-1))
-	{
-		return true;
-	}
-
-	if (calcRight(whiteX, whiteY) == (pos-1))
-	{
-		return true;
-	}
-}
 
 function calcDown (x, y)
 {
@@ -145,40 +122,88 @@ function calcDown (x, y)
 	} 
 }
 
-function swap (pos) {
-	var temp = div[pos].style.top;
-	div[pos].style.top = whiteY;
-	whiteY = temp;
 
-	temp = div[pos].style.left;
-	div[pos].style.left = whiteX;
-	whiteX = temp;
+function checkCanMove(pos)
+{
+	if (calcLeft(whiteSpaceX, whiteSpaceY) == (pos-1))
+	{
+		return true;
+	}
+
+	if (calcDown(whiteSpaceX, whiteSpaceY) == (pos-1))
+	{
+		return true;
+	}
+
+	if (calcUp(whiteSpaceX, whiteSpaceY) == (pos-1))
+	{
+		return true;
+	}
+
+	if (calcRight(whiteSpaceX, whiteSpaceY) == (pos-1))
+	{
+		return true;
+	}
 }
-
-
 function Blink()
 {
-	hlitee --;
-	if (hlitee === 0)
+	blink --;
+	if (blink == 0)
 	{
 		var body = document.getElementsByTagName('body');
-		body[0].style.backgroundColor = "#8FBC8F";
+		body[0].style.backgroundColor = "#FFFFFF";
 		alert('you win');
 		return;
 	}
-	if (hlitee % 2)
+	if (blink % 2)
 	{
-		body = document.getElementsByTagName('body');
-		body[0].style.backgroundColor = "#006400";	
+		var body = document.getElementsByTagName('body');
+		body[0].style.backgroundColor = "#00FF00";	
 	}
 	else
 	{
-		body = document.getElementsByTagName('body');
-		body[0].style.backgroundColor = "#8B008B";
+		var body = document.getElementsByTagName('body');
+		body[0].style.backgroundColor = "#FF0000";
 	}
 	timer = setTimeout(Blink, 100);
 }
 
+function youWin()
+{
+	var body = document.getElementsByTagName('body');
+	body[0].style.backgroundColor = "#FF0000";
+	blink = 10;
+	timer = setTimeout(Blink, 100);
+}
+
+function checkFinish()
+{
+	var flag = true;
+	for (var i = 0; i < div.length; i++) {
+		var y = parseInt(div[i].style.top);
+		var x = parseInt(div[i].style.left);
+
+		if (x != (i%4*100) || y != parseInt(i/4)*100)
+		{
+			flag = false;
+			break;
+		}
+	}
+	return flag;
+}
+
+
+
+
+function swap (pos) {
+	var temp = div[pos].style.top;
+	div[pos].style.top = whiteSpaceY;
+	whiteSpaceY = temp;
+
+	temp = div[pos].style.left;
+	div[pos].style.left = whiteSpaceX;
+	whiteSpaceX = temp;
+}
 
 
 function calcLeft(x, y)
@@ -239,28 +264,3 @@ function calcUp (x, y) {
 	}
 }
 
-
-function youWin()
-{
-	var body = document.getElementsByTagName('body');
-	body[0].style.backgroundColor = "#FF0000";
-	hlitee = 10;
-	timer = setTimeout(Blink, 100);
-	alert("Proceed");
-}
-
-function checkFinish()
-{
-	var flag = true;
-	for (var i = 0; i < div.length; i++) {
-		var y = parseInt(div[i].style.top);
-		var x = parseInt(div[i].style.left);
-
-		if (x != (i%4*100) || y != parseInt(i/4)*100)
-		{
-			flag = false;
-			break;
-		}
-	}
-	return flag;
-}
